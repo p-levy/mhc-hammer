@@ -171,7 +171,30 @@ An example of the file format can be found here: https://github.com/McGranahanLa
 
 **Remember that the alleles input to MHC Hammer must be present in the MHC Hammer reference files in the `assets/mhc_references` folder.** You can get a list of alleles from the fasta file, e.g. `grep '^>' assets/mhc_references/mhc_genome.fasta`
 
-### 6. Update the HPC config files
+### 6. Download Novoalign
+MHC Hammer uses Novoalign to align putative HLA reads. Novoalign must be downloaded by the user and installed locally in order to run MHC Hammer. 
+The steps to do this are as follows:
+1. Go to the [Novocraft website](https://www.novocraft.com/support/download/)
+2. Download the desired version (V3.09.04 was used in the manuscript) - also note that only versions V3 and earlier are available for users without a lisence. Users with a license can download later versions and make use of multi-threading when aligning reads. For more information on which version is applicable to users, please read the licensing information within the [downloads page](https://www.novocraft.com/support/download/).
+3. Move the downloaded novocraft.version.tar.gz file into the bin directory.
+```bash
+   mv /path/to/novocraft.version.tar.gz ${project_dir}/bin/
+```
+4. Download the mhc_hammer_preprocessing_latest.sif container:
+   ```bash
+   cd ${project_dir}/singularity_images
+   singularity pull --arch amd64 library://tpjones15/default/mhc_hammer_preprocessing:latest
+   mhc_hammer_preprocessing_sif="${project_dir}/singularity_images/mhc_hammer_preprocessing_latest.sif"
+   cd ${project_dir}
+   ```
+5. Run the [install_novoalign.sh](scripts/install_novoalign.sh) script.
+   ```bash
+   novocraft_download=novocraft.version.tar.gz # full path or filename is ok
+   bash ${project_dir}/scripts/install_novoalign.sh -p ${project_dir} -h ${novocraft_download}
+   ```
+6. If you are using a licensed version of Novocraft you can make use of multi-threading by updating input parameters ```--licensed_novocraft true --novoalign_num_threads Max_number_of_threads_to_use```
+
+### 7. Update the HPC config files
 
 The `conf/hpc.config` file controls how the pipeline is run on your HPC system. Before running the pipeline you may want to update the variables in `conf/hpc.config` to suit your HPC system. In particular, it might be useful to specify the [singularity bind directory](https://docs.sylabs.io/guides/3.0/user-guide/bind_paths_and_mounts.html) by adding 
 ``` bash
@@ -190,7 +213,7 @@ to `conf/hpc.config`, and changing `cpu` to the name of the HPC queue that you a
 
 Alternatively, if it exists, you can use a config file specific for your institute. See this [page](https://www.nextflow.io/docs/latest/config.html) for more information on nextflow config files.
 
-### 7. Update the MHC Hammer pipeline parameters
+### 8. Update the MHC Hammer pipeline parameters
 
 You can change the MHC Hammer pipeline parameters from the default in the `nextflow.conf` file. Alternatively, you can change the parameters by inputting them directly when you run the pipeline. For a full overview of the pipeline parameters run:
 ```bash
