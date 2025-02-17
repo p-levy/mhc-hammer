@@ -37,6 +37,8 @@ process GENERATE_REFERENCES {
     
     script: 
     """
+    # export paths to local binaries
+    export PATH=\${PATH}:\${NOVOCRAFT_PATH}
    
     # Run Rscript to generate transcriptome allele mismatches
     Rscript --vanilla ${baseDir}/bin/allele_mismatch.R \
@@ -64,7 +66,7 @@ process GENERATE_REFERENCES {
 
     echo "Creating transcriptome novoindex"
     # create novoalign index
-    novoindex ${patient_id}.mhc_transcriptome_fasta.nix ${patient_id}_mhc_transcriptome_reference.fa
+    \${NOVOCRAFT_PATH}/novoindex ${patient_id}.mhc_transcriptome_fasta.nix ${patient_id}_mhc_transcriptome_reference.fa
     echo "Done"
 
     echo "Creating bed file"
@@ -118,7 +120,7 @@ process GENERATE_REFERENCES {
 
     echo "Creating genome novoindex"
     # create novoalign index
-    novoindex ${patient_id}.mhc_genome_fasta.nix ${patient_id}_mhc_genome_reference.fa
+    \${NOVOCRAFT_PATH}/novoindex ${patient_id}.mhc_genome_fasta.nix ${patient_id}_mhc_genome_reference.fa
     echo "Done"
 
     # Get R version and package versions
@@ -132,7 +134,7 @@ process GENERATE_REFERENCES {
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
         tabix: \$(echo \$(tabix --version 2>&1) | sed 's/^.*tabix //; s/Copyright.*\$//')
-        novoalign: \$(novoalign --version)
+        novoalign: \$(\${NOVOCRAFT_PATH}/novoalign --version)
         R: \${R_VERSION}
         data.table: \${DT_VERSION}
         argparse: \${AP_VERSION}

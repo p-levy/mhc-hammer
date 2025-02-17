@@ -17,14 +17,20 @@ process NOVOALIGN {
     script:
     fq1 = fqs[0]
     fq2 = fqs[1]
+    
+    // if Novocraft is a licensed version - multi-threading is available 
+    def args = task.ext.args ?: ''
     """
+    # export paths to local binaries
+    export PATH=\${PATH}:\${NOVOCRAFT_PATH}
+
     # Create named pipes to avoid writing uncompressed FASTQs to disk
     mkfifo fq1_uncompressed fq2_uncompressed
     gzip -cdf ${fq1} > fq1_uncompressed &
     gzip -cdf ${fq2} > fq2_uncompressed &
 
     # Align reads using novoalign
-    novoalign -d ${novoindex} -f fq1_uncompressed fq2_uncompressed -F STDFQ -R 0 -r All 9999 -o SAM -o FullNW 1> ${meta.sample_id}.sam 2> ${meta.sample_id}.metrics
+    \${NOVOCRAFT_PATH}/novoalign ${args} -d ${novoindex} -f fq1_uncompressed fq2_uncompressed -F STDFQ -R 0 -r All 9999 -o SAM -o FullNW 1> ${meta.sample_id}.sam 2> ${meta.sample_id}.metrics
 
     # Convert SAM to BAM
     samtools view -b -o ${meta.sample_id}.bam ${meta.sample_id}.sam
@@ -45,7 +51,7 @@ process NOVOALIGN {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        novoalign: \$(novoalign --version | sed -e "s/V//g")
+        novoalign: \$(\${NOVOCRAFT_PATH}/novoalign --version | sed -e "s/V//g")
     END_VERSIONS
     """
 }
