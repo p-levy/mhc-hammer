@@ -336,7 +336,7 @@ process DETECT_MUTS {
     val(aligner)
 
     output: // for now - only saving the sample level vep tables for mutation depth script
-    path("*.vcf")                           optional true
+    path("*.vcf")                          ,optional: true
     tuple val(meta), path(normal_bams), \
                      path(tumour_bams), \
                      path("*vep.txt") ,     emit: mutation_output
