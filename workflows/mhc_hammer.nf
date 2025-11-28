@@ -53,10 +53,10 @@ if (params.mhc_coords) {
     if (mhc_coords_ch.isEmpty()) {exit 1, "File provided with --mhc_coords is empty: ${mhc_coords_ch.getName()}!"}
 }
 
-// Check mhc_exon_bed file if params.mhc_exon_bed is provided
-if (params.mhc_exon_bed) {
-    exon_bed_ch = file(params.mhc_exon_bed, checkIfExists: true)
-    if (exon_bed_ch.isEmpty()) {exit 1, "File provided with --mhc_exon_bed is empty: ${exon_bed_ch.getName()}!"}
+// Check exon_bed file if params.exon_bed is provided
+if (params.exon_bed) {
+    exon_bed_ch = file(params.exon_bed, checkIfExists: true)
+    if (exon_bed_ch.isEmpty()) {exit 1, "File provided with --exon_bed is empty: ${exon_bed_ch.getName()}!"}
 } else {
     exon_bed_ch = file('NO_FILE')
 }

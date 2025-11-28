@@ -208,6 +208,12 @@
           "description": "If true, unmapped reads are included in library size (e.g. samtools view -c -f 1 -F 2304). If false, unmapped reads are not included in library size (e.g. samtools view -c -f 1 -F 2308).",
           "hidden": true
         },
+        "exon_bed": {
+          "type": "string",
+          "description": "Path to BED file containing exon coordinates for library size calculation. If provided, reads will be counted only in these regions using samtools -L flag.",
+          "format": "file-path",
+          "hidden": true
+        },
         "singularityDir": {
           "type": "string",
           "description": "Path to directory to store singularity images downloaded by this pipeline",
