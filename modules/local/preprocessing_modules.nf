@@ -8,6 +8,7 @@ process FLAGSTAT {
     
     input:
     tuple val(meta), path(bam_file)
+    path exon_bed
 
     output:
     tuple val(meta), \
@@ -17,13 +18,14 @@ process FLAGSTAT {
     path "${meta.sample_id}_${meta.seq}.library_size_without_unmapped.txt"    , emit: library_size_without_unmapped
     path "versions.yml"                                                       , emit: versions
 
-    script: 
+    script:
+    def bed_arg = exon_bed.name != 'NO_FILE' ? "-L ${exon_bed}" : ""
     """
     # run flagstat
     samtools flagstat ${bam_file[0]} > ${meta.sample_id}_${meta.seq}.flagstat
 
-    samtools view -c -f 1 -F 2304 ${bam_file[0]} > ${meta.sample_id}_${meta.seq}.library_size_with_unmapped.txt
-    samtools view -c -f 1 -F 2308 ${bam_file[0]} > ${meta.sample_id}_${meta.seq}.library_size_without_unmapped.txt
+    samtools view -c -f 1 -F 2304 ${bed_arg} ${bam_file[0]} > ${meta.sample_id}_${meta.seq}.library_size_with_unmapped.txt
+    samtools view -c -f 1 -F 2308 ${bed_arg} ${bam_file[0]} > ${meta.sample_id}_${meta.seq}.library_size_without_unmapped.txt
 
     if [ ${params.include_unmapped_reads_in_library_size} == true ]; then
         cp ${meta.sample_id}_${meta.seq}.library_size_with_unmapped.txt ${meta.sample_id}_${meta.seq}.library_size.txt

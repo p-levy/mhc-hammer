@@ -53,6 +53,14 @@ if (params.mhc_coords) {
     if (mhc_coords_ch.isEmpty()) {exit 1, "File provided with --mhc_coords is empty: ${mhc_coords_ch.getName()}!"}
 }
 
+// Check mhc_exon_bed file if params.mhc_exon_bed is provided
+if (params.mhc_exon_bed) {
+    exon_bed_ch = file(params.mhc_exon_bed, checkIfExists: true)
+    if (exon_bed_ch.isEmpty()) {exit 1, "File provided with --mhc_exon_bed is empty: ${exon_bed_ch.getName()}!"}
+} else {
+    exon_bed_ch = file('NO_FILE')
+}
+
 // Check mhc fasta file 
 if (params.mhc_fasta) { 
      mhc_fasta_ch = file(params.mhc_fasta, checkIfExists: true)
@@ -171,7 +179,8 @@ workflow MHC_HAMMER {
         INPUT_CHECK.out.bams_ch, 
         germline_sample_count_ch,
         mhc_coords_ch,
-        contigs_file_ch
+        contigs_file_ch,
+        exon_bed_ch
     )
 
     // update downstream input channels

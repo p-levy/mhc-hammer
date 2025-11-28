@@ -13,13 +13,14 @@ workflow PREPROCESSING {
     gl_sample_count
     mhc_coords
     contigs_file_ch
+    exon_bed
 
     main:
     versions = Channel.empty()
 
     // Subset input bam files for reads that could align to the HLA class I genes - only if params.run_bam_subsetting == true
         
-    FLAGSTAT ( input_bams )
+    FLAGSTAT ( input_bams, exon_bed )
     SUBSET_BAMS ( input_bams, mhc_coords, contigs_file_ch )
     GENERATE_HLA_FQS ( SUBSET_BAMS.out.subset_bam )
 
