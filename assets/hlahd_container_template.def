@@ -8,11 +8,11 @@ From: ubuntu:20.04
     TZ=Europe/London
 
 %files
-    /path/to/downloaded/hlahd.1.7.0.tar.gz /bin/hlahd.tar.gz  ##### Replace with the path to your hlahd.version.tar.gz file
-    /path/to/mhc-hammer/bin/update.dictionary.alt.sh /bin/update.dictionary.alt.sh ##### replace with path to ${projectDir}/bin/update.dictionary.alt.sh
+    /mnt/bioinfnas/immuno/plevy/proj/mhc-hammer/mhc-hammer/bin/hlahd.1.7.1.tar.gz /bin/hlahd.tar.gz  ##### Replace with the path to your hlahd.version.tar.gz file
+    /mnt/bioinfnas/immuno/plevy/proj/mhc-hammer/mhc-hammer/bin/update.dictionary.alt.sh /bin/update.dictionary.alt.sh ##### replace with path to ${projectDir}/bin/update.dictionary.alt.sh
 
 %post
-    HLAHD_VERSION=1.7.0 # Replace with the version of HLA-HD you are using
+    HLAHD_VERSION=1.7.1 # Replace with the version of HLA-HD you are using
     echo "export HLAHD_VERSION=\"${HLAHD_VERSION}\"" >> $SINGULARITY_ENVIRONMENT
 
     # Set non-interactive mode for apt-get
