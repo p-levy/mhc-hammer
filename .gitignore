@@ -2,4 +2,12 @@ mhc_hammer_output
 .nextflow*
 .DS_Store
 singularity*
-
+novocraftV3.09.04.Linux3.10.0.tar.gz
+hlahd.1.7.1.tar.gz
+bin/bowtie2
+bin/hlahd
+bin/novocraft
+assets/kmer_files
+assets/mhc_references
+assets/hlahd_container_template_wget.def
+.gitignore
